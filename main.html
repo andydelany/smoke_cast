@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smoke Forecast GIF</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; text-align: center; }
+    #forecastGif { margin-top: 2em; max-width: 100%; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Latest Smoke Forecast</h1>
+  <button onclick="loadGif()">Generate Forecast GIF</button>
+  <p id="status"></p>
+  <img id="forecastGif" src="" alt="Forecast GIF will appear here" hidden>
+
+  <script>
+    async function loadGif() {
+      const status = document.getElementById("status");
+      const gif = document.getElementById("forecastGif");
+
+      status.textContent = "Loading...";
+      gif.hidden = true;
+
+      try {
+        const res = await fetch('https://smoke-cast-back.onrender.com/generate-gif');
+        if (!res.ok) throw new Error("Request failed");
+
+        const blob = await res.blob();
+        gif.src = URL.createObjectURL(blob);
+        gif.hidden = false;
+        status.textContent = "";
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
